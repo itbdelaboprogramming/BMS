@@ -3,11 +3,11 @@
 #title           :ReadingData.py
 #description     :SOC_OCV For Batteries.
 #author          :Fajar Muhammad Noor Rozaqi
-#date            :2020/06/15
-#version         :0.1
+#date            :2021/03/15
+#version         :0.2
 #usage           :BMS-python
 #notes           :
-#python_version  :3.8
+#python_version  :3.9
 #==============================================================================
 """
 
