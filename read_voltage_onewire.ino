@@ -1,6 +1,7 @@
 #include <OneWire.h>
 
 int V_AD = 0;
+int V_Bat = 0;
 int V_DD = 1;
 int bus = 3;
 float Vad1,Vad2,Vad3,Vad4,Vad5,Vad6,Vad7,Vad8,Vad9,Vad10;
