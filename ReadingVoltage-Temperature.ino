@@ -27,7 +27,7 @@ char order;
 //float power_mW_output = 0;    
 
 // Adressing Battery Sensor  
-uint8_t bat1[8] = {0xA6, 0x27, 0x76, 0xFE, 0x0, 0x0, 0x50, 0x8B};  
+uint8_t bat1[8] = {0xA6, 0x27, 0x76, 0xFE, 0x0, 0x0, 0x50, 0x8B};  ////checking the addressing battery first
 
 // Onewire-Pin
 OneWire ow();  //checking the pin first
