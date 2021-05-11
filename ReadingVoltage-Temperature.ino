@@ -64,7 +64,7 @@ void loop() {
                 Serial.print(" , ");  
             } else {
                     Serial.print("Sensor Temperature 1 = ");  
-                    Serial.print(sensor1.getTemperature(DS2438_CHA), 3);  
+                    Serial.print(sensor1.getTemperature());  
                     Serial.print(" , ");  
             } 
 	    }  
