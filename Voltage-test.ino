@@ -5,7 +5,7 @@
 //date            :2021/04/28
 //version         :0.3
 //usage           :BMS
-//notes           : testing single cell and sending to raspberry pi
+//notes           :Testing battery-cell and sending to raspberry pi
 
 //library
 #include <OneWire.h>
@@ -15,7 +15,7 @@
 // define the 1-Wire address of the DS2438 battery monitor here (lsb first)
 
 uint8_t bat1[8] = {0x26, 0x0B, 0x15, 0x1E, 0x02, 0x00, 0x00, 0x55};
-//uint8_t bat2[8] = {0x26, 0xCE, 0xDD, 0x1D, 0x02, 0x00, 0x00, 0xB5};
+uint8_t bat2[8] = {0x26, 0xCE, 0xDD, 0x1D, 0x02, 0x00, 0x00, 0xB5};
 
 
 //Define OneWire Pin
@@ -23,12 +23,12 @@ OneWire ow(3);
 
 //DS2438 & ADDRESSING
 DS2438 sensor1(&ow, bat1);
-//DS2438 sensor2(&ow, bat2);
+DS2438 sensor2(&ow, bat2);
 
 void setup() {
     Serial.begin(9600);
     sensor1.begin();
-    //sensor2.begin();
+    sensor2.begin();
     delay(100);
 }
 
@@ -43,11 +43,11 @@ void loop() {
         Serial.print(sensor1.getVoltage(DS2438_CHA)*1.347, 3);
         Serial.print(" , ");
         Serial.print("Temperature 1 = ");
-        Serial.println(sensor1.getTemperature());
+        Serial.println(sensor1.getTemperature(),1);
     }
 
     // 2nd Battery Sensor
-    /*sensor2.update();
+    sensor2.update();
     if (sensor2.isError()) {
         Serial.print("Error Reading 2nd Battery");
         Serial.print(" , ");
@@ -55,6 +55,8 @@ void loop() {
         Serial.print("Voltage 2 = ");
         Serial.print(sensor2.getVoltage(DS2438_CHA)*1.367, 3);
         Serial.print(" , ");
+        Serial.print("Temperature 2 = ");
+        Serial.println(sensor2.getTemperature(),1);
     }
 
     Serial.println("-----");*/
