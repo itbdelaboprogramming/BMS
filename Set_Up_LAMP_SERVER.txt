@@ -1,0 +1,64 @@
+//Method for Installing LAMP (Linux Apache Mysql Phpmyadmin)
+
+//open terminal to install Apache
+
+sudo apt-get update
+
+sudo apt-get install apache2
+
+//check hostname
+
+hostname-I
+
+//Setting Up PHP7 for Apache
+
+sudo apt install php7.3 libapache2-mod-php7.3 php7.3-mbstring php7.3-mysql php7.3-curl php7.3-gd php7.3-zip -y
+
+sudo nano /var/www/html/example.php
+
+<?php
+echo "Today's date is ".date('Y-m-d H:i:s');
+
+sudo systemctl reload apache2
+
+//open terminal to install MySQL
+
+sudo apt-get install install mariadb-server
+
+sudo apt-get install install mariadb-client
+
+sudo mysql_secure_installation
+
+sudo mysql -u root -p
+
+CREATE DATABASE exampledb;
+
+CREATE USER 'exampleuser'@'localhost' IDENTIFIED BY 'test';
+
+GRANT ALL PRIVILEGES ON exampledb.* TO 'exampleuser'@'localhost';
+
+FLUSH PRIVILEGES;
+
+//open terminal to install PHP MySQL Connector
+
+sudo apt-get install php-mysql
+
+//open terminal to setting up phpmyadmin on the raspberryPi
+
+sudo apt-get install phpmyadmin
+
+sudo mysql -u root -p
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY 'bmstest' WITH GRANT OPTION;
+
+//open terminal to configuring apache for phpmyadmin
+
+sudo nano /etc/apache2/apache2.conf
+
+Include /etc/phpmyadmin/apache.conf
+
+sudo service apache2 restart
+
+//Accesing PHPMyAdmin
+
+http://localhost/phpmyadmin
