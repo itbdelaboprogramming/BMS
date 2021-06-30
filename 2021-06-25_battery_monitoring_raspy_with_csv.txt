@@ -76,7 +76,7 @@ def main():
                     #Converting into CSV File
                     with open("/home/pi/batterylog.csv", mode='w', newline='') as csvfile:
 
-                        file = csv.writer(csvfile, delimeter =',')
+                        file = csv.writer(csvfile, delimeter =','
                         file.writerow(['time','voltage_1','current_1','temperature_1'])
                         for i in range(0, len(result)):
                             file.writerow(result[i].values())
