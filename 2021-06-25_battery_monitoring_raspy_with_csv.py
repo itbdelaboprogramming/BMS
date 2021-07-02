@@ -27,6 +27,7 @@ serial_rate = 9600
 #test
 print("test")
 print("")
+print("")
 
 #function
 def main():
