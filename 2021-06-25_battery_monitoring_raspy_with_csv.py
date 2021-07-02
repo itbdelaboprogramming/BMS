@@ -24,6 +24,10 @@ serial_port = '/dev/ttyUSB0'
 #it must be same rate used on the Arduino
 serial_rate = 9600
 
+#test
+print("test")
+print("")
+
 #function
 def main():
     ser = serial.Serial(serial_port, serial_rate)
