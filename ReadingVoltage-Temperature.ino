@@ -33,7 +33,7 @@ uint8_t bat1[8] = {0xA6, 0x27, 0x76, 0xFE, 0x0, 0x0, 0x50, 0x8B};  ////checking 
 OneWire ow();  //checking the pin first
 
 // DS2438 & addressing  
-DS2438 sensor1(&ow, bat1);  
+DS2438 sensor(&ow, bat1);  
 
 void setup() {  
     Serial.begin(9600);  
