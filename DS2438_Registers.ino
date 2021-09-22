@@ -3,7 +3,7 @@
 //description     :DS2438 Register.
 //author          :Fajar Muhammad Noor Rozaqi
 //date            :2021/07/21
-//version         :0.3
+//version         :0.4
 //usage           :BMS
 //notes           :DS2438 Registers
 
@@ -11,10 +11,16 @@
 #include <OneWire.h>
 
 //Variable
+int V_AD = 0;
+int I = 0;
+int T = 0;
+int ICA = 0;
+int V_DD = 1;
+
 //Voltage VAD
 float VAD1,VAD2,VAD3,VAD4,VAD5,VAD6,VAD7,VAD8,VAD9,VAD10,VAD11,VAD12;
 //Voltage VDD
-// float VDD1,VDD2,VDD3,VDD4,VDD5,VDD6,VDD7,VDD8,VDD9,VDD10,VDD11,VDD12;
+float VDD1,VDD2,VDD3,VDD4,VDD5,VDD6,VDD7,VDD8,VDD9,VDD10,VDD11,VDD12;
 //Current
 float I1,I2,I3,I4,I5,I6,I7,I8,I9,I10,I11,I12;
 //Temperature
@@ -23,7 +29,7 @@ float T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12;
 float ICA1,ICA2,ICA3,ICA4,ICA5,ICA6,ICA7,ICA8,ICA9,ICA10,ICA11,ICA12;
 
 //pin connection ds2438
-OneWire ds(4);
+OneWire oneWire(4);
 
 void setup() {
   Serial.begin(9600);
@@ -112,16 +118,16 @@ void loop() {
   Serial.print(ICA1,2);
   Serial.print(" , ");
 
-//  //Baterai 2
-//  Serial.print(VAD2,2);
-//  Serial.print(" , ");
-//  Serial.print(I2,2);
-//  Serial.print(" , ");
-//  Serial.print(T2,2);
-//  Serial.print(" , ");
-//  Serial.print(ICA2,2);
-//  Serial.print(" , ");
-//
+  //Baterai 2
+  Serial.print(VAD2,2);
+  Serial.print(" , ");
+  Serial.print(I2,2);
+  Serial.print(" , ");
+  Serial.print(T2,2);
+  Serial.print(" , ");
+  Serial.print(ICA2,2);
+  Serial.print(" , ");
+
 //  //Baterai 3
 //  Serial.print(VAD3,2);
 //  Serial.print(" , ");
@@ -220,7 +226,7 @@ void loop() {
 //  Serial.print(T12,2);
 //  Serial.print(" , ");
 //  Serial.println(ICA12,2);
-  Serial.println("=============")
+  Serial.println("=============");
 }
 
 float V_DS2438(byte*addr, int source){
@@ -293,9 +299,9 @@ float I_DS2438(byte*addr, int source){
   oneWire.write(0xB4);  //Voltage Conversion
   delay(20);            //Wait for A/D to complete
 
-  ds.reset();
-  ds.select(addr);
-  ds.write(0x44); //Temperature Conversion
+  oneWire.reset();
+  oneWire.select(addr);
+  oneWire.write(0x44); //Temperature Conversion
   delay(20);
   
   // Current readings are updated automatically
@@ -349,9 +355,9 @@ float T_DS2438(byte*addr, int source){
   oneWire.write(0xB4);  //Voltage Conversion
   delay(20);            //Wait for A/D to complete
 
-  ds.reset();
-  ds.select(addr);
-  ds.write(0x44); //Temperature Conversion
+  oneWire.reset();
+  oneWire.select(addr);
+  oneWire.write(0x44); //Temperature Conversion
   delay(20);
   
   // Current readings are updated automatically
@@ -384,7 +390,7 @@ float T_DS2438(byte*addr, int source){
   return(temp);
 }
 
-float T_DS2438(byte*addr, int source){
+float ICA_DS2438(byte*addr, int source){
   int n;
   byte data[12];
   
@@ -392,7 +398,7 @@ float T_DS2438(byte*addr, int source){
   oneWire.select(addr);       //Match rom 0x55
   oneWire.write(0x4E);        //Write scratchpad
   oneWire.write(0x00);        //Page 0
-  if (source == T)         //Setup Vdd or Vad for A/D
+  if (source == ICA)         //Setup Vdd or Vad for A/D
     {
       oneWire.write(0x00);    //Input VAD //bit 5 Voltage A/D input select bit
     }
@@ -405,9 +411,9 @@ float T_DS2438(byte*addr, int source){
   oneWire.write(0xB4);  //Voltage Conversion
   delay(20);            //Wait for A/D to complete
 
-  ds.reset();
-  ds.select(addr);
-  ds.write(0x44); //Temperature Conversion
+  oneWire.reset();
+  oneWire.select(addr);
+  oneWire.write(0x44); //Temperature Conversion
   delay(20);
   
   // Current readings are updated automatically
@@ -424,44 +430,44 @@ float T_DS2438(byte*addr, int source){
 
   //ENABLING ICA, CCA, AND DCA ON SINGLE DS2438 (BUS MASTER COMMAND)  
   // Reading Page 1
-  ds.reset();
-  ds.select(addr);
-  ds.write(0x4E); //write scratchpad
-  ds.write(0x00); //page 0
-  ds.write(0x0F); //Sets ICA, CA, EE, AD BITS ACTIVE
+  oneWire.reset();
+  oneWire.select(addr);
+  oneWire.write(0x4E); //write scratchpad
+  oneWire.write(0x00); //page 0
+  oneWire.write(0x0F); //Sets ICA, CA, EE, AD BITS ACTIVE
 
   // Read Scratchpad 0xBE
-  ds.reset();
-  ds.select(addr);
-  ds.write(0xBE);
-  ds.write(0x00); //Still not sure
+  oneWire.reset();
+  oneWire.select(addr);
+  oneWire.write(0xBE);
+  oneWire.write(0x00); //Still not sure
 
   // Activate DS2438 BECOME 1
-  ds.reset();
-  ds.select(addr);
-  ds.write(0x48);
-  ds.write(0x00);
-  ds.reset();
+  oneWire.reset();
+  oneWire.select(addr);
+  oneWire.write(0x48);
+  oneWire.write(0x00);
+  oneWire.reset();
   
   //==================================================================================================== 
   // Reading Page 1
-  ds.reset();
-  ds.select(addr);
-  ds.write(0x4E); //write scratchpad
-  ds.write(0x01); //Page 1
-  ds.write(0x01); //Page 1
+  oneWire.reset();
+  oneWire.select(addr);
+  oneWire.write(0x4E); //write scratchpad
+  oneWire.write(0x01); //Page 1
+  oneWire.write(0x01); //Page 1
 
   // Recall 0xB8
-  ds.reset();
-  ds.select(addr);
-  ds.write(0xB8); // Recall 0xB8
-  ds.write(0x01); // Page 1
+  oneWire.reset();
+  oneWire.select(addr);
+  oneWire.write(0xB8); // Recall 0xB8
+  oneWire.write(0x01); // Page 1
 
   // Read Scratchpad 0xBE
-  ds.reset();
-  ds.select(addr);
-  ds.write(0xBE);
-  ds.write(0x01);
+  oneWire.reset();
+  oneWire.select(addr);
+  oneWire.write(0xBE);
+  oneWire.write(0x01);
   
   for (n=0; n<9; n++)
     {
@@ -475,7 +481,8 @@ float T_DS2438(byte*addr, int source){
     Serial.println("CRC is not valid!");
     return;
   }
+
   float ica = (data[4] * 0.4882 / (2048 * 0.0005));
-  
+  // if bat_nomical_capacity = 3.6 #Battery
   return(ica);
 }
