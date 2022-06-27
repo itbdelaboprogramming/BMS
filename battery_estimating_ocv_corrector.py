@@ -150,10 +150,14 @@ def printFittingResults(chiSquaredResults, xValues, yValues):
 def main():
 
     # Get the data as a list from an nx2 .csv file
+<<<<<<< HEAD
     # batteryData1 = csvToList('D:/BMS_OCV_Test.csv')
     # print(batteryData1)
     
     # batteryData1 = excelTolList("D:/BMS_OCV_Test_Lithium.xlsx")
+=======
+    batteryData1 = csvToList('D:/BMS_OCV_TEST')
+>>>>>>> 430d560f223fe42cb6999b4f50ce3a4a398decba
 
     # Separate measurement numbers and OCV readings into separate lists
     # measurementNumbers1 = list()
