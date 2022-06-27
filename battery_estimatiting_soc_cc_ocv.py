@@ -86,19 +86,19 @@ time_soc = pd.to_datetime(np.ravel(time_soc)).dropna()
 #Estimation of SOC Battery
 def SOC_estimation():
 
-	#Initial value
-	capacity = 116*2
-	SOC = 50 #initial soc had to be tuned first
-	dt = 1/60
+	# #Initial value
+	# capacity = 116*2
+	# SOC = 50 #initial soc had to be tuned first
+	# dt = 1/60
 
-	#Estimation SOC with CC Method
-	SOC_cc = []
-	for i, data in enumerate(i_0):
-		# I = i_0[i]
-		SOC = SOC + ((i_0[i]*dt)/capacity)
-		SOC_cc.append(SOC)
-	SOC_cc = pd.Series(np.ravel(SOC_cc)).dropna()
-	print(SOC_cc)
+	# #Estimation SOC with CC Method
+	# SOC_cc = []
+	# for i, data in enumerate(i_0):
+	# 	# I = i_0[i]
+	# 	SOC = SOC + ((i_0[i]*dt)/capacity)
+	# 	SOC_cc.append(SOC)
+	# SOC_cc = pd.Series(np.ravel(SOC_cc)).dropna()
+	# print(SOC_cc)
 
 	#Estimation Soc with OCV 7th order
 	SOC_ocv = []
