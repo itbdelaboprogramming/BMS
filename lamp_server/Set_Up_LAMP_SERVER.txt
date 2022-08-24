@@ -23,9 +23,9 @@ sudo systemctl reload apache2
 
 //open terminal to install MySQL
 
-sudo apt-get install install mariadb-server
+sudo apt-get install mariadb-server
 
-sudo apt-get install install mariadb-client
+sudo apt-get install mariadb-client
 
 sudo mysql_secure_installation
 
