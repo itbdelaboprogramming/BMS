@@ -14,6 +14,7 @@
 # Import library
 import can # code packet for canbus communication
 import time # RTC Real Time Clock
+import pymysql # code packet for mysql database communication
 
 # Specifications of Socket CAN (Check first the type)
 bustype = 'socketcan_cytapes' # Types of socket
