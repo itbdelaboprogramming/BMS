@@ -18,7 +18,7 @@ import serial
 import pymysql
 
 #serial tx/rx pins on the GPIO header or USB
-serial_port = '/dev/ttyUSB0'
+serial_port = '/dev/ttyUSB5'
 #it must be same rate used on the Arduino
 serial_rate = 9600
 
@@ -211,7 +211,7 @@ def main():
             cur = db.cursor()
             
             try:
-                add_c1 ="INSERT INTO `battery_monitoring_cluster_1`(time,voltage_1,current_1,temperature_1,capacity_1,voltage_2,current_2,temperature_2,capacity_2,voltage_3,current_3,temperature_3,capacity_3,voltage_4,current_4,temperature_4,capacity_4,voltage_5,current_5,temperature_5,capacity_5,voltage_6,current_6,temperature_6,capacity_6,voltage_7,current_7,temperature_7,capacity_7,voltage_8,current_8,temperature_8,capacity_8,voltage_9,current_9,temperature_9,capacity_9,voltage_10,current_10,temperature_10,capacity_10,voltage_11,current_11,temperature_11,capacity_11,voltage_12,current_12,temperature_12,capacity_12) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                add_c1 ="INSERT INTO `battery_monitoring_cluster_5`(time,voltage_1,current_1,temperature_1,capacity_1,voltage_2,current_2,temperature_2,capacity_2,voltage_3,current_3,temperature_3,capacity_3,voltage_4,current_4,temperature_4,capacity_4,voltage_5,current_5,temperature_5,capacity_5,voltage_6,current_6,temperature_6,capacity_6,voltage_7,current_7,temperature_7,capacity_7,voltage_8,current_8,temperature_8,capacity_8,voltage_9,current_9,temperature_9,capacity_9,voltage_10,current_10,temperature_10,capacity_10,voltage_11,current_11,temperature_11,capacity_11,voltage_12,current_12,temperature_12,capacity_12) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 cur.execute(add_c1,(timer.strftime("%Y-%m-%d %H:%M:%S"),
                                     V_1,
                                     I_1,
