@@ -1,12 +1,12 @@
 """
 #!/usr/bin/env python
-#title           :battery_estimating_ocv_model.py
-#description     :Polynomial Fitting For Batteries based on OCV method (offline).
+#title           :Nepower_Kyuden_Battery_OCV_model.py
+#description     :Polynomial Fitting For Kyuden Battery based on OCV method (offline).
 #author          :Fajar Muhammad Noor Rozaqi
-#date            :2021/09/12
+#date            :2023/06/05
 #version         :0.1
-#usage           :BMS-python
-#notes           :
+#usage           :Battery Management System (BMS)
+#notes           :Program is under review
 #python_version  :3.8
 #==============================================================================
 """
