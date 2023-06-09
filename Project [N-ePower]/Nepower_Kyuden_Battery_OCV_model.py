@@ -1,6 +1,6 @@
 """
 #!/usr/bin/env python
-#title           :Nepower_Kyuden_Battery_OCV_model.py
+#title           :Nepower_Kyuden_Battery_OCV_Model.py
 #description     :Polynomial Fitting For Kyuden Battery based on OCV method (offline).
 #author          :Fajar Muhammad Noor Rozaqi
 #date            :2023/06/05
