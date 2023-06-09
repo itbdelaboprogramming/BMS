@@ -1,7 +1,7 @@
 """
 #!/usr/bin/env python
-#title           :nthOrderPolynomialfit.py
-#description     :Polynomial Fitting For Batteries.
+#title           :battery_estimating_ocv_model.py
+#description     :Polynomial Fitting For Batteries based on OCV method (offline).
 #author          :Fajar Muhammad Noor Rozaqi
 #date            :2021/09/12
 #version         :0.1
