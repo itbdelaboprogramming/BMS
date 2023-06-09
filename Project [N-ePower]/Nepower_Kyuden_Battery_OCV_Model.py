@@ -6,7 +6,7 @@
 #date            :2023/06/05
 #version         :0.1
 #usage           :Battery Management System (BMS)
-#notes           :Program is under review
+#notes           :Program/Algorithm is under review
 #python_version  :3.8
 #==============================================================================
 """
