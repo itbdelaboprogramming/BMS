@@ -1,6 +1,6 @@
 """
 #!/usr/bin/env python
-#title           :battery_monitoring_raspi.py
+#title           :battery_monitoring_raspy_with_csv.py
 #description     :-
 #author          :Fajar Muhammad Noor Rozaqi
 #date            :2021/04/15
