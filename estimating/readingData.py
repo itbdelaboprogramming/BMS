@@ -106,7 +106,7 @@ def SOC_estimation():
 	soc = []
 
 	for i, data in enumerate(v_soc):
-		x8 = 0
+		x8	= 0
 		x7	= 0
 		x6	= 2.237762467861503
 		x5	= 0.03418556060441675
