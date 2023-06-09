@@ -1,12 +1,12 @@
 """
 #!/usr/bin/env python
-#title           :ReadingData.py
-#description     :SOC_OCV For Batteries.
+#title           :Nepower_Kyuden_Battery_SoC_OCV.py
+#description     :SOC OCV (Open Circuit Voltage) method For Kyuden Battery.
 #author          :Fajar Muhammad Noor Rozaqi
-#date            :2021/09/20
-#version         :0.2
+#date            :2023/06/05
+#version         :0.1
 #usage           :BMS-python
-#notes           :
+#notes           :Program/Algorithm is under review
 #python_version  :3.8
 #==============================================================================
 """
