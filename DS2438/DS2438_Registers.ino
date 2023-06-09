@@ -1,6 +1,6 @@
 //Register DS2438
-//title           :ReadingDS2438.ino
-//description     :DS2438 Register.
+//title           :DS2438_Registers.ino
+//description     :DS2438 Register EEPROM program (c++ or arduino ino files)
 //author          :Fajar Muhammad Noor Rozaqi
 //date            :2021/07/21
 //version         :0.4
@@ -8,7 +8,7 @@
 //notes           :DS2438 Registers
 
 //library
-#include <OneWire.h>
+#include <OneWire.h>  //I2C communication
 
 //Variable
 int V_AD = 0;
@@ -28,7 +28,7 @@ float T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12;
 //ICA (SoC ESTIMATION)
 float ICA1,ICA2,ICA3,ICA4,ICA5,ICA6,ICA7,ICA8,ICA9,ICA10,ICA11,ICA12;
 
-//pin connection ds2438
+//Pn connection ds2438
 OneWire oneWire(4);
 
 void setup() {
@@ -247,7 +247,7 @@ float V_DS2438(byte*addr, int source){
              
   oneWire.reset();
   oneWire.select(addr);
-  oneWire.write(0xB4);  //Voltage Conversion
+  oneWire.write(0xB4);   //Voltage Conversion
   delay(20);            //Wait for A/D to complete
 
   oneWire.reset();
@@ -286,7 +286,7 @@ float I_DS2438(byte*addr, int source){
   oneWire.select(addr);       //Match rom 0x55
   oneWire.write(0x4E);        //Write scratchpad
   oneWire.write(0x00);        //Page 0
-  if (source == I)         //Setup Vdd or Vad for A/D
+  if (source == I)            //Setup Vdd or Vad for A/D
     {
       oneWire.write(0x00);    //Input VAD //bit 5 Voltage A/D input select bit
     }
