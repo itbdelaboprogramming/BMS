@@ -3,11 +3,11 @@
 #title           :Nepower_Kyuden_Battery_OCV_Model.py
 #description     :Polynomial Fitting For Kyuden Battery based on OCV method (offline).
 #author          :Fajar Muhammad Noor Rozaqi
-#date            :2023/06/05
-#version         :0.1
+#date            :2024/11/01
+#version         :0.2
 #usage           :Battery Management System (BMS)
-#notes           :Program/Algorithm is under review
-#python_version  :3.8
+#notes           :
+#python_version  :3.9.7
 #==============================================================================
 """
 
@@ -119,7 +119,7 @@ def findOptimalOrderFit(xValues, yValues):
     # Only checks order n=1:8 to minimize compute time
     n = 1
     chiSquaredResults = list()
-    while n <=8:
+    while n <=11:
         currentChiSquared = getChiSquaredValue(yValues, getPolyFitValues(n, xValues, yValues))
         chiSquaredResults.append([n, currentChiSquared])
         n += 1
@@ -155,7 +155,7 @@ def main():
     # print(batteryData1)
     
     # batteryData1 = excelTolList("D:/BMS_OCV_Test_Lithium.xlsx")
-    batteryData1 = csvToList('D:/BMS_OCV_TEST')
+    # batteryData1 = csvToList('D:/BMS_OCV_TEST')
 
     # Separate measurement numbers and OCV readings into separate lists
     # measurementNumbers1 = list()
@@ -171,7 +171,7 @@ def main():
     # print(voltageReading1)
     
     # Reading excel file
-    datafile = pd.read_excel('D:/BMS_OCV_Test_Lithium.xlsx', header=None)
+    datafile = pd.read_excel('D:/discharging2_filtered.xlsx', header=None)
     measurementNumbers1 = list()
     voltageReading1 = list()
     measurementNumbers1 = list(datafile[0])
@@ -238,7 +238,7 @@ def main():
         plt.grid(True)
         # Plots the experimental SoC vs OCV
         plt.subplot(1, 2, 2)
-        plt.plot(normalizedSoC, voltageReadingFinal, label='Experimental Data Lithium 2021/06/17 ')
+        plt.plot(normalizedSoC, voltageReadingFinal, label='Experimental Data Lithium 2023/07/11 ')
         # Plots the modeled values using the polynomial fit for SoC vs OCV
         plt.plot(modeledValues,voltageReadingFinal, label='Polynomial Fit')
         plt.legend(loc='best')
@@ -250,7 +250,7 @@ def main():
         plt.subplots_adjust(wspace=0.35)
     else:
         # Plots the experimental SoC vs OCV
-        plt.plot(normalizedSoC, voltageReadingFinal, label='Experimental Data Lithium 2021/06/17')
+        plt.plot(normalizedSoC, voltageReadingFinal, label='Experimental Data Lithium 2023/07/11')
         # Plots the modeled values using the polynomial fit for SoC vs OCV
         plt.plot(modeledValues, voltageReadingFinal, label='Polynomial Fit')
         plt.legend(loc='best')
