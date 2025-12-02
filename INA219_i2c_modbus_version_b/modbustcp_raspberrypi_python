@@ -1,0 +1,179 @@
+#!/usr/bin/env python3
+
+"""
+python: 3.13.7
+pymodbus: 3.11.3
+"""
+
+import smbus3
+import time
+import os
+import logging
+import threading
+
+# CORRECTED IMPORT: Use StartTcpServer instead of StartSerialServer
+from pymodbus.server import StartTcpServer
+from pymodbus.datastore import ModbusDeviceContext, ModbusServerContext
+from pymodbus.datastore import ModbusSequentialDataBlock
+
+# --- I2C Configuration ---
+I2C_ADDR = 0x2D
+LOW_VOL_SHUTDOWN = 3150  # mV
+
+# --- Modbus TCP Configuration ---
+MODBUS_HOST_IP = '0.0.0.0'   # Listen on all network interfaces
+MODBUS_TCP_PORT = 502        # Standard Modbus TCP port
+MY_UNIT_ID = 1               # Unit ID
+
+# --- Configure Logging ---
+logging.basicConfig()
+log = logging.getLogger()
+log.setLevel(logging.INFO)
+
+# --- Modbus Register Mapping ---
+REGISTER_MAP = {
+    'charging_status': 1,
+    'vbus_voltage': 2,
+    'vbus_current': 3,
+    'vbus_power': 4,
+    'battery_voltage': 5,
+    'battery_current': 6,
+    'battery_percent': 7,
+    'battery_capacity': 8,
+    'empty_time': 9,
+    'full_time': 10,
+    'voltage_V1': 11,
+    'voltage_V2': 12,
+    'voltage_V3': 13,
+    'voltage_V4': 14,
+}
+
+
+def i2c_data_updater(server_context):
+    """
+    Runs in a separate thread.
+    Reads data from the I2C device and updates Modbus holding registers.
+    """
+    log.info("I2C Updater: Starting background thread...")
+    bus = smbus3.SMBus(1)
+    low_voltage_counter = 0
+
+    # Holding register block
+    holding_register_block = server_context[MY_UNIT_ID].store['h']
+
+    while True:
+        try:
+            log.info("I2C Updater: Reading new data from sensor...")
+
+            # --- Read Charging Status ---
+            data = bus.read_i2c_block_data(I2C_ADDR, 0x02, 1)
+            charging_status = data[0]
+            holding_register_block.values[REGISTER_MAP['charging_status']] = charging_status
+
+            # --- Read VBUS Data ---
+            data = bus.read_i2c_block_data(I2C_ADDR, 0x10, 6)
+            vbus_voltage = data[0] | (data[1] << 8)
+            vbus_current = data[2] | (data[3] << 8)
+            vbus_power = data[4] | (data[5] << 8)
+
+            holding_register_block.values[REGISTER_MAP['vbus_voltage']] = vbus_voltage
+            holding_register_block.values[REGISTER_MAP['vbus_current']] = vbus_current
+            holding_register_block.values[REGISTER_MAP['vbus_power']] = vbus_power
+
+            # --- Read Battery Data ---
+            data = bus.read_i2c_block_data(I2C_ADDR, 0x20, 12)
+            battery_voltage = data[0] | (data[1] << 8)
+            battery_current = data[2] | (data[3] << 8)
+            battery_percent = data[4] | (data[5] << 8)
+            battery_capacity = data[6] | (data[7] << 8)
+            empty_time = data[8] | (data[9] << 8)
+            full_time = data[10] | (data[11] << 8)
+
+            holding_register_block.values[REGISTER_MAP['battery_voltage']] = battery_voltage
+            holding_register_block.values[REGISTER_MAP['battery_current']] = battery_current
+            holding_register_block.values[REGISTER_MAP['battery_percent']] = battery_percent
+            holding_register_block.values[REGISTER_MAP['battery_capacity']] = battery_capacity
+            holding_register_block.values[REGISTER_MAP['empty_time']] = empty_time
+            holding_register_block.values[REGISTER_MAP['full_time']] = full_time
+
+            # --- Read Cell Voltages ---
+            data = bus.read_i2c_block_data(I2C_ADDR, 0x30, 8)
+            voltage_V1 = data[0] | (data[1] << 8)
+            voltage_V2 = data[2] | (data[3] << 8)
+            voltage_V3 = data[4] | (data[5] << 8)
+            voltage_V4 = data[6] | (data[7] << 8)
+
+            holding_register_block.values[REGISTER_MAP['voltage_V1']] = voltage_V1
+            holding_register_block.values[REGISTER_MAP['voltage_V2']] = voltage_V2
+            holding_register_block.values[REGISTER_MAP['voltage_V3']] = voltage_V3
+            holding_register_block.values[REGISTER_MAP['voltage_V4']] = voltage_V4
+
+            log.info(
+                f"I2C Updater: Battery at {battery_percent}%, "
+                f"Voltage: {battery_voltage} mV. Registers updated."
+            )
+
+            # --- Low Voltage Shutdown Logic ---
+            is_low_voltage = (
+                voltage_V1 < LOW_VOL_SHUTDOWN or
+                voltage_V2 < LOW_VOL_SHUTDOWN or
+                voltage_V3 < LOW_VOL_SHUTDOWN or
+                voltage_V4 < LOW_VOL_SHUTDOWN
+            )
+
+            if is_low_voltage and battery_current < 50:
+                low_voltage_counter += 1
+                if low_voltage_counter >= 30:
+                    log.warning("Critical low voltage. Shutting down now.")
+                    # os.system("sudo poweroff")
+                    break
+                else:
+                    remaining = 60 - 2 * low_voltage_counter
+                    log.warning(f"Low voltage detected! Shutdown in {remaining}s.")
+            else:
+                low_voltage_counter = 0
+
+        except IOError as e:
+            log.error(
+                f"I/O Error communicating with sensor at 0x{I2C_ADDR:02x}. "
+                f"Check connection. Error: {e}"
+            )
+
+        except Exception as e:
+            log.error(f"Unexpected error: {e}")
+
+        time.sleep(2)
+
+    log.info("I2C Updater: Background thread has stopped.")
+
+
+# --- Main Server Execution ---
+if __name__ == "__main__":
+
+    # --- Initialize Modbus Data Store ---
+    store = ModbusDeviceContext(
+        hr=ModbusSequentialDataBlock(0, [0] * 100),  # Holding Registers
+        ir=ModbusSequentialDataBlock(0, [0] * 100),  # Input Registers
+        co=ModbusSequentialDataBlock(0, [0] * 100),  # Coils
+        di=ModbusSequentialDataBlock(0, [0] * 100)   # Discrete Inputs
+    )
+
+    context = ModbusServerContext(
+        devices={MY_UNIT_ID: store},
+        single=False
+    )
+
+    # --- Start the I2C Updater Thread ---
+    updater_thread = threading.Thread(
+        target=i2c_data_updater,
+        args=(context,)
+    )
+    updater_thread.daemon = True
+    updater_thread.start()
+
+    log.info(f"Modbus Server: Starting TCP Server on {MODBUS_HOST_IP}:{MODBUS_TCP_PORT}...")
+
+    StartTcpServer(
+        context=context,
+        address=(MODBUS_HOST_IP, MODBUS_TCP_PORT)
+    )
